@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <title>杞﹂€熻绠楀櫒</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f5f7;
+      --card: #fff;
+      --text: #1d1d1f;
+      --muted: #86868b;
+      --accent: #0071e3;
+      --accent-hover: #0077ed;
+      --border: #d2d2d7;
+      --error: #ff3b30;
+      --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-hover: 0 4px 12px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
+      --radius: 16px;
+      --radius-sm: 10px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1d1d1f;
+        --card: #2c2c2e;
+        --text: #f5f5f7;
+        --muted: #8e8e93;
+        --accent: #0a84ff;
+        --accent-hover: #409cff;
+        --border: #3a3a3c;
+        --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+        --shadow-hover: 0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
+      }
+    }
+    html { font-size: 16px; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro SC", "PingFang SC", "Helvetica Neue", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+      padding: 16px;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-text-size-adjust: 100%;
+    }
+    .container { max-width: 420px; margin: 0 auto; }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: box-shadow 0.2s ease;
+    }
+    h1 { font-size: 20px; font-weight: 600; margin-bottom: 20px; text-align: center; letter-spacing: -0.02em; }
+    .field { margin-bottom: 14px; }
+    .field:last-child { margin-bottom: 0; }
+    label { display: flex; align-items: center; font-size: 14px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+    .input-row { display: flex; align-items: center; gap: 0; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); overflow: hidden; transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+    .input-row:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,113,227,0.15); }
+    .input-row input {
+      flex: 1;
+      padding: 10px 12px;
+      font-size: 16px;
+      font-family: inherit;
+      color: var(--text);
+      background: transparent;
+      border: none;
+      outline: none;
+      -webkit-appearance: none;
+      min-width: 0;
+    }
+    .input-row input::-webkit-inner-spin-button,
+    .input-row input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    .input-row input[type=number] { -moz-appearance: textfield; }
+    .input-unit {
+      padding: 10px 12px;
+      font-size: 13px;
+      color: var(--muted);
+      background: var(--card);
+      border-left: 1px solid var(--border);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .hint { font-size: 12px; color: var(--muted); margin-top: 5px; line-height: 1.4; }
+    .hint strong { color: var(--text); font-weight: 500; }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      margin-top: 6px;
+      font-size: 17px;
+      font-weight: 600;
+      font-family: inherit;
+      color: #fff;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.05s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active { transform: scale(0.985); background: var(--accent-hover); }
+    .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .result-card {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+      color: #fff;
+      text-align: center;
+      padding: 24px 20px;
+      display: none;
+    }
+    .result-card.show { display: block; }
+    .result-label { font-size: 14px; font-weight: 500; opacity: 0.9; margin-bottom: 4px; }
+    .result-value { font-size: 38px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+    .result-unit { font-size: 15px; font-weight: 500; opacity: 0.85; margin-top: 4px; }
+    .result-detail { font-size: 12px; opacity: 0.75; margin-top: 10px; line-height: 1.5; text-align: left; padding: 8px 10px; background: rgba(255,255,255,0.1); border-radius: 8px; }
+    .history-card { padding: 16px 20px; }
+    .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .history-title { font-size: 16px; font-weight: 600; }
+    .history-clear { font-size: 13px; color: var(--muted); background: none; border: none; padding: 4px 8px; border-radius: 6px; cursor: pointer; transition: color 0.15s, background 0.15s; }
+    .history-clear:hover { color: var(--error); background: rgba(255,59,48,0.1); }
+    .history-clear:focus-visible { outline: 2px solid var(--error); outline-offset: 2px; }
+    .history-list { display: flex; flex-direction: column; gap: 8px; }
+    .history-empty { text-align: center; padding: 20px; color: var(--muted); font-size: 14px; }
+    .history-item {
+      background: var(--bg);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    .history-item:active { transform: scale(0.99); }
+    .history-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .history-params { font-size: 11px; color: var(--muted); line-height: 1.5; flex: 1; min-width: 0; }
+    .history-params span { color: var(--text); font-weight: 500; }
+    .history-speed { font-size: 17px; font-weight: 700; color: var(--accent); white-space: nowrap; flex-shrink: 0; }
+    @media (prefers-color-scheme: dark) {
+      .history-speed { color: #60a5fa; }
+    }
+    .error-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--error);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: var(--shadow-hover);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      z-index: 100;
+      pointer-events: none;
+      max-width: calc(100vw - 48px);
+    }
+    .error-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    @media (max-width: 380px) {
+      .result-value { font-size: 32px; }
+      .card { padding: 16px; }
+      h1 { font-size: 18px; }
+      .input-row input { font-size: 15px; padding: 8px 10px; }
+      .input-unit { padding: 8px 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>杞﹂€熻绠楀櫒</h1>
+
+    <div class="card">
+      <div class="field">
+        <label>杞€?/label>
+        <div class="input-row">
+          <input type="number" id="rpm" step="any" min="0" placeholder="渚嬪 3000">
+          <span class="input-unit">r/min</span>
+        </div>
+        <p class="hint">鍙戝姩鏈鸿浆閫燂紝鑼冨洿锛? ~ 99999 r/min</p>
+      </div>
+
+      <div class="field">
+        <label>杞瘋灏哄</label>
+        <div class="input-row">
+          <input type="number" id="rimSize" step="any" min="0" placeholder="渚嬪 18">
+          <span class="input-unit">inch</span>
+        </div>
+        <p class="hint">杞瘋鐩村緞锛岃寖鍥达細0 ~ 99 inch</p>
+      </div>
+
+      <div class="field">
+        <label>杞儙瀹藉害</label>
+        <div class="input-row">
+          <input type="number" id="tireWidth" step="any" min="0" placeholder="渚嬪 235">
+          <span class="input-unit">mm</span>
+        </div>
+        <p class="hint">濡?235/55R18 涓?<strong>235mm</strong>锛岃緭鍏ュ悗鑷姩 梅10 鈫?23.5cm 浠ｅ叆鍏紡</p>
+      </div>
+
+      <div class="field">
+        <label>鎵佸钩姣?/label>
+        <div class="input-row">
+          <input type="number" id="aspectRatio" step="any" min="0" max="100" placeholder="渚嬪 55">
+          <span class="input-unit">%</span>
+        </div>
+        <p class="hint">濡?235/55R18 涓?<strong>55</strong>锛岃緭鍏ュ悗鑷姩 梅100 鈫?0.55 浠ｅ叆鍏紡</p>
+      </div>
+
+      <div class="field">
+        <label>鍙橀€熺浼犲姩姣?/label>
+        <div class="input-row">
+          <input type="number" id="gearRatio" step="any" min="0" placeholder="渚嬪 3.5">
+          <span class="input-unit"></span>
+        </div>
+        <p class="hint">褰撳墠鎸′綅浼犲姩姣旓紝濡?1 鎸?鈮?3.5 ~ 4.5</p>
+      </div>
+
+      <div class="field">
+        <label>涓诲噺閫熸瘮</label>
+        <div class="input-row">
+          <input type="number" id="finalRatio" step="any" min="0" placeholder="渚嬪 4.1">
+          <span class="input-unit"></span>
+        </div>
+        <p class="hint">缁堜紶鍔ㄦ瘮锛屼竴鑸?3.5 ~ 5.0</p>
+      </div>
+
+      <button class="btn" id="calcBtn">璁＄畻杞﹂€?/button>
+    </div>
+
+    <div class="card result-card" id="resultCard">
+      <div class="result-label">鐞嗚杞﹂€?/div>
+      <div class="result-value" id="resultValue">鈥?/div>
+      <div class="result-unit">km/h</div>
+      <div class="result-detail" id="resultDetail"></div>
+    </div>
+
+    <div class="card history-card">
+      <div class="history-header">
+        <span class="history-title">杩?5 娆¤褰?/span>
+        <button class="history-clear" id="clearHistory">娓呯┖</button>
+      </div>
+      <div class="history-list" id="historyList">
+        <div class="history-empty">鏆傛棤璁板綍</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="error-toast" id="errorToast"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      const $ = id => document.getElementById(id);
+      const inputs = {
+        rpm: $('rpm'),
+        rimSize: $('rimSize'),
+        tireWidth: $('tireWidth'),
+        aspectRatio: $('aspectRatio'),
+        gearRatio: $('gearRatio'),
+        finalRatio: $('finalRatio')
+      };
+      const calcBtn = $('calcBtn');
+      const resultCard = $('resultCard');
+      const resultValue = $('resultValue');
+      const resultDetail = $('resultDetail');
+      const historyList = $('historyList');
+      const clearBtn = $('clearHistory');
+      const toast = $('errorToast');
+
+      const STORAGE_KEY = 'car_speed_calc_v1';
+      const MAX_HISTORY = 5;
+
+      function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+      }
+
+      function readValues() {
+        const v = {};
+        for (const [key, el] of Object.entries(inputs)) {
+          const raw = el.value.trim();
+          if (raw === '') { showToast('璇峰～鍐欐墍鏈夊弬鏁?); el.focus(); return null; }
+          const num = parseFloat(raw);
+          if (isNaN(num) || num <= 0) { showToast('鍙傛暟蹇呴』涓烘鏁?); el.focus(); return null; }
+          v[key] = num;
+        }
+        if (v.aspectRatio > 100) { showToast('鎵佸钩姣斿簲鍦?0~100 涔嬮棿'); inputs.aspectRatio.focus(); return null; }
+        return v;
+      }
+
+      function calcSpeed(v) {
+        const B_cm = v.tireWidth / 10;
+        const k = v.aspectRatio / 100;
+        const radius_cm = v.rimSize * 1.27 + B_cm * k;
+        return (0.377 * v.rpm * radius_cm) / (v.gearRatio * v.finalRatio * 100);
+      }
+
+      function getHistory() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+        catch { return []; }
+      }
+
+      function saveHistory(entry) {
+        try {
+          const h = getHistory();
+          h.unshift(entry);
+          if (h.length > MAX_HISTORY) h.length = MAX_HISTORY;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(h));
+        } catch {}
+      }
+
+      function fmtSpeed(s) {
+        if (s >= 1000) return s.toFixed(1);
+        if (s >= 100) return s.toFixed(1);
+        if (s >= 10) return s.toFixed(2);
+        if (s >= 1) return s.toFixed(2);
+        return s.toFixed(3);
+      }
+
+      function fmtNum(n) {
+        return Number(n).toLocaleString('zh-CN', { maximumFractionDigits: 2 });
+      }
+
+      function renderHistory() {
+        const h = getHistory();
+        if (h.length === 0) {
+          historyList.innerHTML = '<div class="history-empty">鏆傛棤璁板綍</div>';
+          return;
+        }
+        historyList.innerHTML = h.map((item, idx) => {
+          const p = item.inputs;
+          return '<div class="history-item" data-idx="' + idx + '">' +
+            '<div class="history-row">' +
+              '<div class="history-params">' +
+                fmtNum(p.rpm) + 'rpm ' +
+                p.rimSize + '" ' +
+                fmtNum(p.tireWidth) + '/' + fmtNum(p.aspectRatio) + ' ' +
+                'i=' + fmtNum(p.gearRatio) + ' ' +
+                'f=' + fmtNum(p.finalRatio) +
+              '</div>' +
+              '<div class="history-speed">' + fmtSpeed(item.speed) + ' km/h</div>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+
+        historyList.querySelectorAll('.history-item').forEach(el => {
+          el.addEventListener('click', function () {
+            const idx = parseInt(this.dataset.idx);
+            const h = getHistory();
+            if (h[idx]) {
+              const p = h[idx].inputs;
+              inputs.rpm.value = p.rpm;
+              inputs.rimSize.value = p.rimSize;
+              inputs.tireWidth.value = p.tireWidth;
+              inputs.aspectRatio.value = p.aspectRatio;
+              inputs.gearRatio.value = p.gearRatio;
+              inputs.finalRatio.value = p.finalRatio;
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              showToast('宸插～鍏ヨ褰曞弬鏁帮紝鐐瑰嚮銆岃绠楄溅閫熴€嶆煡鐪嬬粨鏋?);
+            }
+          });
+        });
+      }
+
+      function showResult(speed, v) {
+        resultValue.textContent = fmtSpeed(speed) + ' km/h';
+        const B_cm = v.tireWidth / 10;
+        const k = v.aspectRatio / 100;
+        const R = (v.rimSize * 1.27 + B_cm * k).toFixed(2);
+        resultDetail.innerHTML =
+          '<div>鍏紡锛?.377 脳 ' + fmtNum(v.rpm) + ' 脳 (' + fmtNum(v.rimSize) + '脳1.27 + ' + fmtNum(B_cm) + '脳' + k + ') / (' + fmtNum(v.gearRatio) + '脳' + fmtNum(v.finalRatio) + '脳100)</div>' +
+          '<div>杞儙鍗婂緞 鈮?' + R + ' cm</div>';
+        resultCard.classList.add('show');
+        resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      calcBtn.addEventListener('click', function () {
+        const v = readValues();
+        if (!v) return;
+        const speed = calcSpeed(v);
+        showResult(speed, v);
+        saveHistory({ inputs: v, speed, time: Date.now() });
+        renderHistory();
+      });
+
+      clearBtn.addEventListener('click', function () {
+        try { localStorage.removeItem(STORAGE_KEY); } catch {}
+        renderHistory();
+        showToast('鍘嗗彶璁板綍宸叉竻绌?);
+      });
+
+      Object.values(inputs).forEach(el => {
+        el.addEventListener('keydown', e => {
+          if (e.key === 'Enter') calcBtn.click();
+        });
+      });
+
+      renderHistory();
+
+      document.addEventListener('dblclick', e => e.preventDefault(), { passive: false });
+    })();
+  </script>
+</body>
+</html>
