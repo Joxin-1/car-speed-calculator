@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="format-detection" content="telephone=no">
-  <title>杞﹂€熻绠楀櫒</title>
+  <title>车速计算器</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -169,80 +169,80 @@
 </head>
 <body>
   <div class="container">
-    <h1>杞﹂€熻绠楀櫒</h1>
+    <h1>车速计算器</h1>
 
     <div class="card">
       <div class="field">
-        <label>杞€?/label>
+        <label>转速</label>
         <div class="input-row">
-          <input type="number" id="rpm" step="any" min="0" placeholder="渚嬪 3000">
+          <input type="number" id="rpm" step="any" min="0" placeholder="例如 3000">
           <span class="input-unit">r/min</span>
         </div>
-        <p class="hint">鍙戝姩鏈鸿浆閫燂紝鑼冨洿锛? ~ 99999 r/min</p>
+        <p class="hint">发动机转速，范围：0 ~ 99999 r/min</p>
       </div>
 
       <div class="field">
-        <label>杞瘋灏哄</label>
+        <label>轮毂尺寸</label>
         <div class="input-row">
-          <input type="number" id="rimSize" step="any" min="0" placeholder="渚嬪 18">
+          <input type="number" id="rimSize" step="any" min="0" placeholder="例如 18">
           <span class="input-unit">inch</span>
         </div>
-        <p class="hint">杞瘋鐩村緞锛岃寖鍥达細0 ~ 99 inch</p>
+        <p class="hint">轮毂直径，范围：0 ~ 99 inch</p>
       </div>
 
       <div class="field">
-        <label>杞儙瀹藉害</label>
+        <label>轮胎宽度</label>
         <div class="input-row">
-          <input type="number" id="tireWidth" step="any" min="0" placeholder="渚嬪 235">
+          <input type="number" id="tireWidth" step="any" min="0" placeholder="例如 235">
           <span class="input-unit">mm</span>
         </div>
-        <p class="hint">濡?235/55R18 涓?<strong>235mm</strong>锛岃緭鍏ュ悗鑷姩 梅10 鈫?23.5cm 浠ｅ叆鍏紡</p>
+        <p class="hint">如 235/55R18 中 <strong>235mm</strong>，输入后自动 ÷10 → 23.5cm 代入公式</p>
       </div>
 
       <div class="field">
-        <label>鎵佸钩姣?/label>
+        <label>扁平比</label>
         <div class="input-row">
-          <input type="number" id="aspectRatio" step="any" min="0" max="100" placeholder="渚嬪 55">
+          <input type="number" id="aspectRatio" step="any" min="0" max="100" placeholder="例如 55">
           <span class="input-unit">%</span>
         </div>
-        <p class="hint">濡?235/55R18 涓?<strong>55</strong>锛岃緭鍏ュ悗鑷姩 梅100 鈫?0.55 浠ｅ叆鍏紡</p>
+        <p class="hint">如 235/55R18 中 <strong>55</strong>，输入后自动 ÷100 → 0.55 代入公式</p>
       </div>
 
       <div class="field">
-        <label>鍙橀€熺浼犲姩姣?/label>
+        <label>变速箱传动比</label>
         <div class="input-row">
-          <input type="number" id="gearRatio" step="any" min="0" placeholder="渚嬪 3.5">
+          <input type="number" id="gearRatio" step="any" min="0" placeholder="例如 3.5">
           <span class="input-unit"></span>
         </div>
-        <p class="hint">褰撳墠鎸′綅浼犲姩姣旓紝濡?1 鎸?鈮?3.5 ~ 4.5</p>
+        <p class="hint">当前挡位传动比，如 1 挡 ≈ 3.5 ~ 4.5</p>
       </div>
 
       <div class="field">
-        <label>涓诲噺閫熸瘮</label>
+        <label>主减速比</label>
         <div class="input-row">
-          <input type="number" id="finalRatio" step="any" min="0" placeholder="渚嬪 4.1">
+          <input type="number" id="finalRatio" step="any" min="0" placeholder="例如 4.1">
           <span class="input-unit"></span>
         </div>
-        <p class="hint">缁堜紶鍔ㄦ瘮锛屼竴鑸?3.5 ~ 5.0</p>
+        <p class="hint">终传动比，一般 3.5 ~ 5.0</p>
       </div>
 
-      <button class="btn" id="calcBtn">璁＄畻杞﹂€?/button>
+      <button class="btn" id="calcBtn">计算车速</button>
     </div>
 
     <div class="card result-card" id="resultCard">
-      <div class="result-label">鐞嗚杞﹂€?/div>
-      <div class="result-value" id="resultValue">鈥?/div>
+      <div class="result-label">理论车速</div>
+      <div class="result-value" id="resultValue">—</div>
       <div class="result-unit">km/h</div>
       <div class="result-detail" id="resultDetail"></div>
     </div>
 
     <div class="card history-card">
       <div class="history-header">
-        <span class="history-title">杩?5 娆¤褰?/span>
-        <button class="history-clear" id="clearHistory">娓呯┖</button>
+        <span class="history-title">近 5 次记录</span>
+        <button class="history-clear" id="clearHistory">清空</button>
       </div>
       <div class="history-list" id="historyList">
-        <div class="history-empty">鏆傛棤璁板綍</div>
+        <div class="history-empty">暂无记录</div>
       </div>
     </div>
   </div>
@@ -283,12 +283,12 @@
         const v = {};
         for (const [key, el] of Object.entries(inputs)) {
           const raw = el.value.trim();
-          if (raw === '') { showToast('璇峰～鍐欐墍鏈夊弬鏁?); el.focus(); return null; }
+          if (raw === '') { showToast('请填写所有参数'); el.focus(); return null; }
           const num = parseFloat(raw);
-          if (isNaN(num) || num <= 0) { showToast('鍙傛暟蹇呴』涓烘鏁?); el.focus(); return null; }
+          if (isNaN(num) || num <= 0) { showToast('参数必须为正数'); el.focus(); return null; }
           v[key] = num;
         }
-        if (v.aspectRatio > 100) { showToast('鎵佸钩姣斿簲鍦?0~100 涔嬮棿'); inputs.aspectRatio.focus(); return null; }
+        if (v.aspectRatio > 100) { showToast('扁平比应在 0~100 之间'); inputs.aspectRatio.focus(); return null; }
         return v;
       }
 
@@ -328,7 +328,7 @@
       function renderHistory() {
         const h = getHistory();
         if (h.length === 0) {
-          historyList.innerHTML = '<div class="history-empty">鏆傛棤璁板綍</div>';
+          historyList.innerHTML = '<div class="history-empty">暂无记录</div>';
           return;
         }
         historyList.innerHTML = h.map((item, idx) => {
@@ -360,7 +360,7 @@
               inputs.gearRatio.value = p.gearRatio;
               inputs.finalRatio.value = p.finalRatio;
               window.scrollTo({ top: 0, behavior: 'smooth' });
-              showToast('宸插～鍏ヨ褰曞弬鏁帮紝鐐瑰嚮銆岃绠楄溅閫熴€嶆煡鐪嬬粨鏋?);
+              showToast('已填入记录参数，点击「计算车速」查看结果');
             }
           });
         });
@@ -372,8 +372,8 @@
         const k = v.aspectRatio / 100;
         const R = (v.rimSize * 1.27 + B_cm * k).toFixed(2);
         resultDetail.innerHTML =
-          '<div>鍏紡锛?.377 脳 ' + fmtNum(v.rpm) + ' 脳 (' + fmtNum(v.rimSize) + '脳1.27 + ' + fmtNum(B_cm) + '脳' + k + ') / (' + fmtNum(v.gearRatio) + '脳' + fmtNum(v.finalRatio) + '脳100)</div>' +
-          '<div>杞儙鍗婂緞 鈮?' + R + ' cm</div>';
+          '<div>公式：0.377 × ' + fmtNum(v.rpm) + ' × (' + fmtNum(v.rimSize) + '×1.27 + ' + fmtNum(B_cm) + '×' + k + ') / (' + fmtNum(v.gearRatio) + '×' + fmtNum(v.finalRatio) + '×100)</div>' +
+          '<div>轮胎半径 ≈ ' + R + ' cm</div>';
         resultCard.classList.add('show');
         resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
@@ -390,7 +390,7 @@
       clearBtn.addEventListener('click', function () {
         try { localStorage.removeItem(STORAGE_KEY); } catch {}
         renderHistory();
-        showToast('鍘嗗彶璁板綍宸叉竻绌?);
+        showToast('历史记录已清空');
       });
 
       Object.values(inputs).forEach(el => {
